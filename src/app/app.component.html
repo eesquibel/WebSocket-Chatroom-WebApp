@@ -3,18 +3,18 @@
 <form>
 
   <p *ngFor="let msg of chatLog">
-    <label>{{ msg.author }}: </label>
-    <span>{{ msg.message }}</span>
+    <label>{{ msg.Author }}: </label>
+    <span>{{ msg.Message }}</span>
   </p>
 
   <br />
 
   <mat-form-field class="full-width">
-    <input type="text" name="author" placeholder="Your Name" [(ngModel)]="message.author" matInput />
+    <input type="text" name="author" placeholder="Your Name" [(ngModel)]="message.Author" matInput />
   </mat-form-field>
 
   <mat-form-field class="full-width">
-    <input type="text" name="message" placeholder="Your Message" [(ngModel)]="message.message" matInput />
+    <input type="text" name="message" placeholder="Your Message" [(ngModel)]="message.Message" matInput />
   </mat-form-field>
 
   <button (click)="sendMsg()" mat-button>Send Message</button>

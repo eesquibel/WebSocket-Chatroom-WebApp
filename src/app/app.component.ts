@@ -17,20 +17,22 @@ export class AppComponent {
   constructor(private chatService: ChatService, private chRef: ChangeDetectorRef) {
     chatService.messages.subscribe(msg => {
       console.log("Response from websocket: ", msg);
-      console.log(msg.author + ': ' + msg.message);
+      console.log(msg.Author + ': ' + msg.Message);
       this.chatLog.push(msg);
       console.log(this.chatLog);
     });
 
     this.message = {
-      author: 'Screen',
-      message: ''
+      Author: 'Screen',
+      Message: '',
+      Id: '00000000-0000-0000-0000-000000000000',
+      Timestamp: new Date()
     };
   }
   
   sendMsg() {
     console.log('new message from client to websocket: ', this.message);
     this.chatService.messages.next(this.message);
-    this.message.message = '';
+    this.message.Message = '';
   }
 }
