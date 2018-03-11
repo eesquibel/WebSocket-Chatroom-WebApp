@@ -1,6 +1,6 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { WebsocketService } from './websocket.service';
-import { ChatService, Message } from './chat.service';
+import { ChatService, WebWrapper, Message } from './chat.service';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -17,9 +17,15 @@ export class AppComponent {
   constructor(private chatService: ChatService, private chRef: ChangeDetectorRef) {
     chatService.messages.subscribe(msg => {
       console.log("Response from websocket: ", msg);
-      console.log(msg.Author + ': ' + msg.Message);
-      this.chatLog.push(msg);
-      console.log(this.chatLog);
+
+      switch (msg.Type) {
+        case 'ChatMessage':
+          this.chatLog.push(msg.Payload);
+          break;
+        case 'ChatMessageCollection':
+          this.chatLog = msg.Payload;
+          break;
+      }
     });
 
     this.message = {
@@ -32,7 +38,13 @@ export class AppComponent {
   
   sendMsg() {
     console.log('new message from client to websocket: ', this.message);
-    this.chatService.messages.next(this.message);
+
+    let payload: WebWrapper = {
+      Type: 'ChatMessage',
+      Payload: this.message
+    };
+
+    this.chatService.messages.next(payload);
     this.message.Message = '';
   }
 }

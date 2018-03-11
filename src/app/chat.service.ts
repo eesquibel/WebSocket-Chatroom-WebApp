@@ -5,6 +5,11 @@ import { timestamp } from 'rxjs/operators';
 
 const CHAT_URL = 'ws://' + location.host + '/ws';
 
+export interface WebWrapper {
+  Type: string,
+  Payload: any
+}
+
 export interface Message {
   Id: string,
   Author: string,
@@ -15,19 +20,14 @@ export interface Message {
 @Injectable()
 export class ChatService {
 
-  public messages: Subject<Message>;
+  public messages: Subject<WebWrapper>;
 
   constructor(wsService: WebsocketService) {
-    this.messages = <Subject<Message>>wsService
+    this.messages = <Subject<WebWrapper>>wsService
       .connect(CHAT_URL)
-      .map((response: MessageEvent): Message => {
-        let data = JSON.parse(response.data);
-        return {
-          Author: data.Author,
-          Message: data.Message,
-          Id: data.Id,
-          Timestamp: data.Iimestamp
-        }
+      .map((response: MessageEvent): WebWrapper => {
+        let data: WebWrapper = JSON.parse(response.data);
+        return data;
       });
   }
 
